@@ -1,0 +1,26 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# API Keys and sensitive data
+churnkey_analyzer.py
+offers_dashboard.py
+generate_html_dashboard.py
+
+# Data exports (optional - uncomment if you don't want to share data)
+# *.csv
+# churnkey_reports/
+# offers_dashboard/*.csv
+# offers_dashboard/*.txt
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
