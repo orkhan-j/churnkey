@@ -56,6 +56,7 @@ class SimpleDashboard:
         for session in sessions:
             created_at = pd.to_datetime(session.get('createdAt'))
             save_type = session.get('saveType')
+            canceled = session.get('canceled', False)
 
             # Track all sessions
             is_accepted = save_type and save_type != 'ABANDON'
@@ -63,8 +64,10 @@ class SimpleDashboard:
             all_records.append({
                 'date': created_at,
                 'accepted': is_accepted,
+                'canceled': canceled,
                 'offer_type': save_type if is_accepted else None,
                 'plan_price': session.get('customer', {}).get('planPrice', 0),
+                'cancellation_reason': session.get('surveyChoiceValue') if canceled else None,
             })
 
         df = pd.DataFrame(all_records)
@@ -136,6 +139,60 @@ class SimpleDashboard:
         monthly['accepted_count'] = monthly['accepted_count'].fillna(0).astype(int)
         monthly['revenue_saved'] = monthly['revenue_saved'].fillna(0)
         monthly['acceptance_rate'] = (monthly['accepted_count'] / monthly['total_count'] * 100).round(1)
+
+        monthly = monthly.rename(columns={'month_label': 'month'})
+        return monthly.sort_values('month', ascending=False)
+
+    def calculate_cancellation_stats_weekly(self, df):
+        """Calculate weekly cancellation statistics"""
+        df_canceled = df[df['canceled'] == True].copy()
+
+        # Calculate stats
+        weekly_all = df.groupby('week_label').size().reset_index(name='total_count')
+        weekly_canceled = df_canceled.groupby('week_label').size().reset_index(name='canceled_count')
+
+        # Get cancellation reasons breakdown
+        reason_data = []
+        for week in df['week_label'].unique():
+            week_data = df[(df['week_label'] == week) & (df['canceled'] == True)]
+            reasons = week_data['cancellation_reason'].value_counts().to_dict() if not week_data.empty else {}
+            reason_data.append({'week_label': week, 'reasons': reasons})
+
+        weekly_reasons = pd.DataFrame(reason_data)
+
+        # Merge
+        weekly = weekly_all.merge(weekly_canceled, on='week_label', how='left')
+        weekly = weekly.merge(weekly_reasons, on='week_label', how='left')
+
+        weekly['canceled_count'] = weekly['canceled_count'].fillna(0).astype(int)
+        weekly['cancellation_rate'] = (weekly['canceled_count'] / weekly['total_count'] * 100).round(1)
+
+        weekly = weekly.rename(columns={'week_label': 'week'})
+        return weekly.sort_values('week', ascending=False)
+
+    def calculate_cancellation_stats_monthly(self, df):
+        """Calculate monthly cancellation statistics"""
+        df_canceled = df[df['canceled'] == True].copy()
+
+        # Calculate stats
+        monthly_all = df.groupby('month_label').size().reset_index(name='total_count')
+        monthly_canceled = df_canceled.groupby('month_label').size().reset_index(name='canceled_count')
+
+        # Get cancellation reasons breakdown
+        reason_data = []
+        for month in df['month_label'].unique():
+            month_data = df[(df['month_label'] == month) & (df['canceled'] == True)]
+            reasons = month_data['cancellation_reason'].value_counts().to_dict() if not month_data.empty else {}
+            reason_data.append({'month_label': month, 'reasons': reasons})
+
+        monthly_reasons = pd.DataFrame(reason_data)
+
+        # Merge
+        monthly = monthly_all.merge(monthly_canceled, on='month_label', how='left')
+        monthly = monthly.merge(monthly_reasons, on='month_label', how='left')
+
+        monthly['canceled_count'] = monthly['canceled_count'].fillna(0).astype(int)
+        monthly['cancellation_rate'] = (monthly['canceled_count'] / monthly['total_count'] * 100).round(1)
 
         monthly = monthly.rename(columns={'month_label': 'month'})
         return monthly.sort_values('month', ascending=False)
