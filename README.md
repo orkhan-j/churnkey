@@ -1,61 +1,53 @@
 # 📊 Churnkey Analytics Dashboard
 
-Interactive dashboards visualizing accepted offers, churn prevention metrics, and revenue impact from Churnkey.
+Interactive dashboard showing cancel flows and reactivation metrics from Churnkey.
 
-## 🌐 Live Dashboards
+## 🌐 Live Dashboard
 
-- **Main Dashboard**: https://orkhan-j.github.io/churnkey/
-- **Revenue Dashboard**: https://orkhan-j.github.io/churnkey/revenue.html
+**Cancel Flows & Reactivation Dashboard**: https://orkhan-j.github.io/churnkey/
 
-## 📈 Available Dashboards
+## 📈 Dashboard Overview
 
-### 1. Main Dashboard (index.html)
+### 🔄 Cancel Flows & Reactivation Dashboard
 
-**Two main sections**:
+**Four main sections**:
 
-#### 🎯 Accepted Offers Section
-- **Acceptance Rates** - Weekly and monthly offer acceptance percentages
-- **Offer Counts** - Number of accepted offers vs total sessions
-- **Revenue Saved** - Total revenue saved from accepted offers
-- **Offer Type Breakdown** - Distribution of DISCOUNT, PAUSE, PLAN_CHANGE, etc.
-- **Toggle Views** - Switch between weekly and monthly data views
-- **Color-Coded Rates** - Visual indicators for good/medium/low acceptance rates
+#### 1. Flow 1 📊
+Your primary cancel flow tracking:
+- **Sessions Count** - Total sessions through this flow
+- **Acceptance Rate** - Percentage of offers accepted
+- **Cancellation Rate** - Percentage of cancellations
+- **Weekly/Monthly Views** - Track trends over time
 
-#### ❌ Canceled Sessions Section
-- **Cancellation Rates** - Weekly and monthly cancellation percentages
-- **Cancellation Counts** - Number of canceled sessions
-- **Top Reasons** - Most common cancellation reasons for each period
-- **Trend Analysis** - See how cancellations change over time
-- **Toggle Views** - Switch between weekly and monthly data views
+#### 2. Flow 2 📊
+Your secondary cancel flow tracking:
+- **Sessions Count** - Total sessions through this flow
+- **Acceptance Rate** - Percentage of offers accepted
+- **Cancellation Rate** - Percentage of cancellations
+- **Weekly/Monthly Views** - Track trends over time
 
-### 2. Revenue Impact Dashboard (revenue.html) 💰
+#### 3. Combined Flows 📈
+Aggregate view of both cancel flows:
+- **Total Sessions** - Combined from both flows
+- **Overall Acceptance Rate** - Across both flows
+- **Overall Cancellation Rate** - Across both flows
+- **Trend Analysis** - See combined performance
 
-**Financial analysis focused on revenue metrics**:
-
-#### Revenue Trends
-- **Revenue Saved** - Total revenue retained from accepted offers
-- **Revenue Lost** - Revenue from cancellations
-- **Net Revenue Impact** - Saved minus lost
-- **Average Revenue per Save** - Financial efficiency metric
-- **Save Rate Tracking** - Percentage of successful saves
-- **Weekly/Monthly Views** - Track revenue trends over time
-
-#### Breakdown by Offer Type
-- **Revenue by Save Type** - DISCOUNT, PAUSE, PLAN_CHANGE performance
-- **Number of Saves** - Volume per offer type
-- **Average Revenue per Save** - Which offers generate most value
-- **Percentage Distribution** - Share of total revenue per offer type
+#### 4. Reactivation 🔄
+Track customers who return:
+- **Unique Customers** - Total customers per period
+- **Reactivated Customers** - Those who came back
+- **Reactivation Rate** - Percentage who returned
+- **Weekly/Monthly Views** - Track reactivation trends
 
 ## 🎨 Features
 
-- ✅ **Two dashboards**: Main (offers/cancellations) + Revenue Impact
+- ✅ **Two cancel flows** tracked separately and combined
+- ✅ **Reactivation tracking** - See who comes back
 - ✅ **Monthly view by default** (with weekly toggle)
 - ✅ Simple, clean table-based design
-- ✅ Financial metrics and revenue tracking
 - ✅ Acceptance rate and cancellation rate tracking
-- ✅ Top cancellation reasons breakdown
-- ✅ Revenue breakdown by offer type
-- ✅ Color-coded performance metrics (green = good, red = loss)
+- ✅ Color-coded performance metrics (green = good, yellow = medium, red = low)
 - ✅ Fully responsive (mobile & desktop)
 - ✅ Self-contained HTML (no external dependencies)
 - ✅ Last 6 months of data
@@ -64,39 +56,38 @@ Interactive dashboards visualizing accepted offers, churn prevention metrics, an
 
 ## 📊 Metrics Overview
 
-The dashboard analyzes:
-- Accepted offer rates
-- Revenue impact
-- Offer type effectiveness
-- Time-based trends
-- Regional patterns
+The dashboard tracks:
+- **Two separate cancel flows** performance
+- **Acceptance rates** per flow and combined
+- **Cancellation rates** per flow and combined
+- **Reactivation rates** - Customers who return
+- **Time-based trends** (weekly & monthly)
+- **Session volumes** across flows
 
 ## 🔄 How to Update
 
-### Update All Dashboards (Recommended for Monday updates):
+### Update Dashboard (Recommended for Monday updates):
 
 ```bash
-# Update main dashboard
-python3 generate_dashboard_v2.py
-
-# Update revenue dashboard
-python3 generate_revenue_dashboard.py
+# Update flows dashboard
+python3 generate_flows_dashboard.py
 
 # Push to GitHub
-git add index.html revenue.html
-git commit -m "Update dashboards with latest data"
+git add index.html
+git commit -m "Update dashboard with latest data"
 git push origin main
 ```
 
 ### What Gets Updated:
 1. ✅ Latest 6 months of session data from Churnkey API
-2. ✅ Weekly and monthly acceptance rates
-3. ✅ Weekly and monthly cancellation rates and reasons
-4. ✅ Revenue saved vs lost calculations
-5. ✅ Revenue breakdown by offer type
-6. ✅ Both `index.html` and `revenue.html` files
+2. ✅ Both cancel flows identified and tracked
+3. ✅ Weekly and monthly acceptance rates per flow
+4. ✅ Weekly and monthly cancellation rates per flow
+5. ✅ Reactivation rates and customer tracking
+6. ✅ Combined flow statistics
+7. ✅ `index.html` file
 
-The live dashboards update automatically on GitHub Pages within 1-2 minutes!
+The live dashboard updates automatically on GitHub Pages within 1-2 minutes!
 
 ## 📦 Requirements
 

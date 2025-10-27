@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Churnkey Dashboard</title>
+    <title>Cancel Flows & Reactivation Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,42 +23,61 @@
         }
 
         .header {
-            background: #4a5568;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             color: white;
             padding: 30px;
             border-radius: 8px 8px 0 0;
         }
 
-        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
         .header p { font-size: 14px; opacity: 0.9; }
 
         .metrics {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             padding: 30px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        .metric { text-align: center; }
-        .metric-value { font-size: 32px; font-weight: bold; color: #2d3748; margin-bottom: 5px; }
-        .metric-label { font-size: 13px; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
 
         .section-tabs {
             padding: 20px 30px 0;
             border-bottom: 2px solid #e2e8f0;
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
 
         .section-tab {
-            padding: 12px 24px;
+            padding: 12px 20px;
             background: transparent;
             border: none;
             border-bottom: 3px solid transparent;
             color: #718096;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             transition: all 0.2s;
         }
@@ -67,8 +86,6 @@
             color: #4a5568;
             border-bottom-color: #4a5568;
         }
-
-        .section-tab:hover { color: #2d3748; }
 
         .section-content { display: none; }
         .section-content.active { display: block; }
@@ -93,7 +110,6 @@
         }
 
         .toggle-btn.active { background: #4a5568; color: white; }
-        .toggle-btn:hover { background: #2d3748; color: white; border-color: #2d3748; }
 
         .content { padding: 30px; }
         .view { display: none; }
@@ -127,8 +143,6 @@
         .rate-medium { color: #d69e2e; font-weight: 600; }
         .rate-low { color: #e53e3e; font-weight: 600; }
 
-        .details { font-size: 12px; color: #718096; }
-
         .footer {
             padding: 20px 30px;
             background: #f7fafc;
@@ -140,394 +154,288 @@
 
         @media (max-width: 768px) {
             .metrics { grid-template-columns: 1fr 1fr; }
-            .controls { flex-direction: column; }
-            table { font-size: 12px; }
-            th, td { padding: 8px; }
-            .section-tabs { flex-wrap: wrap; }
+            .section-tabs { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Churnkey Dashboard</h1>
-            <p>Last 6 Months | Updated October 27, 2025 at 11:19</p>
+            <h1>🔄 Cancel Flows & Reactivation Dashboard</h1>
+            <p>Last 6 Months | Updated October 27, 2025 at 11:28</p>
         </div>
 
         <div class="metrics">
             <div class="metric">
-                <div class="metric-value">641</div>
+                <div class="metric-value">642</div>
                 <div class="metric-label">Total Sessions</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">260</div>
+                <div class="metric-label">Flow 1 Sessions</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">91</div>
+                <div class="metric-label">Flow 2 Sessions</div>
             </div>
             <div class="metric">
                 <div class="metric-value">27</div>
                 <div class="metric-label">Accepted Offers</div>
             </div>
             <div class="metric">
-                <div class="metric-value">4.2%</div>
-                <div class="metric-label">Acceptance Rate</div>
+                <div class="metric-value">38</div>
+                <div class="metric-label">Reactivated Customers</div>
             </div>
             <div class="metric">
-                <div class="metric-value">549</div>
-                <div class="metric-label">Canceled</div>
-            </div>
-            <div class="metric">
-                <div class="metric-value">$729</div>
-                <div class="metric-label">Revenue Saved</div>
+                <div class="metric-value">6.4%</div>
+                <div class="metric-label">Reactivation Rate</div>
             </div>
         </div>
 
         <div class="section-tabs">
-            <button class="section-tab active" onclick="showSection('accepted')">Accepted Offers</button>
-            <button class="section-tab" onclick="showSection('canceled')">Canceled Sessions</button>
+            <button class="section-tab active" onclick="showSection('flow1')">Flow 1</button>
+            <button class="section-tab" onclick="showSection('flow2')">Flow 2</button>
+            <button class="section-tab" onclick="showSection('combined')">Combined Flows</button>
+            <button class="section-tab" onclick="showSection('reactivation')">Reactivation</button>
         </div>
-
-        <!-- ACCEPTED OFFERS SECTION -->
-        <div id="accepted-section" class="section-content active">
+<div id="flow1-section" class="section-content active">
+        <div class="section-content">
             <div class="controls">
-                <button class="toggle-btn" onclick="showView('accepted', 'weekly')">Weekly View</button>
-                <button class="toggle-btn active" onclick="showView('accepted', 'monthly')">Monthly View</button>
+                <button class="toggle-btn" onclick="showViewInSection(event, 'weekly')">Weekly View</button>
+                <button class="toggle-btn active" onclick="showViewInSection(event, 'monthly')">Monthly View</button>
             </div>
 
             <div class="content">
-                <div id="accepted-weekly-view" class="view">
-                    <h2 style="margin-bottom: 10px; color: #2d3748;">Weekly Acceptance Rates</h2>
+                <div class="view">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Flow 1 - Weekly</h2>
                     <table>
                         <thead>
                             <tr>
                                 <th>Week</th>
+                                <th style="text-align: right;">Sessions</th>
                                 <th style="text-align: right;">Accepted</th>
-                                <th style="text-align: right;">Total</th>
-                                <th style="text-align: right;">Rate</th>
-                                <th style="text-align: right;">Revenue</th>
-                                <th>Offer Types</th>
+                                <th style="text-align: right;">Canceled</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr>
-                                <td><strong>2025-W43</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W42</strong></td>
-                                <td style="text-align: right;">2</td>
-                                <td style="text-align: right;">30</td>
-                                <td style="text-align: right;" class="rate-low">6.7%</td>
-                                <td style="text-align: right;">$80</td>
-                                <td class="details">DISCOUNT: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W41</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W40</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">34</td>
-                                <td style="text-align: right;" class="rate-low">2.9%</td>
-                                <td style="text-align: right;">$6</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W39</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">3.6%</td>
-                                <td style="text-align: right;">$6</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W38</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">22</td>
-                                <td style="text-align: right;" class="rate-low">4.5%</td>
-                                <td style="text-align: right;">$25</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W37</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">25</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W36</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">3.6%</td>
-                                <td style="text-align: right;">$6</td>
-                                <td class="details">PAUSE: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W35</strong></td>
-                                <td style="text-align: right;">5</td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;" class="rate-low">19.2%</td>
-                                <td style="text-align: right;">$121</td>
-                                <td class="details">PAUSE: 3, DISCOUNT: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W34</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">35</td>
-                                <td style="text-align: right;" class="rate-low">2.9%</td>
-                                <td style="text-align: right;">$25</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
 
                             <tr>
                                 <td><strong>2025-W33</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">14</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W32</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">27</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W31</strong></td>
-                                <td style="text-align: right;">2</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">7.1%</td>
-                                <td style="text-align: right;">$85</td>
-                                <td class="details">DISCOUNT: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W30</strong></td>
-                                <td style="text-align: right;">2</td>
-                                <td style="text-align: right;">35</td>
-                                <td style="text-align: right;" class="rate-low">5.7%</td>
-                                <td style="text-align: right;">$50</td>
-                                <td class="details">DISCOUNT: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W29</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;" class="rate-low">5.6%</td>
-                                <td style="text-align: right;">$25</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W28</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">15</td>
-                                <td style="text-align: right;" class="rate-low">6.7%</td>
-                                <td style="text-align: right;">$25</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W27</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">30</td>
-                                <td style="text-align: right;" class="rate-low">3.3%</td>
-                                <td style="text-align: right;">$25</td>
-                                <td class="details">DISCOUNT: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W26</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W25</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W24</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">16</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W23</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">24</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W22</strong></td>
-                                <td style="text-align: right;">4</td>
-                                <td style="text-align: right;">27</td>
-                                <td style="text-align: right;" class="rate-low">14.8%</td>
-                                <td style="text-align: right;">$115</td>
-                                <td class="details">DISCOUNT: 4</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W21</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">21</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W20</strong></td>
-                                <td style="text-align: right;">4</td>
-                                <td style="text-align: right;">34</td>
-                                <td style="text-align: right;" class="rate-low">11.8%</td>
-                                <td style="text-align: right;">$135</td>
-                                <td class="details">DISCOUNT: 4</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W19</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">19</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W18</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">23</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W17</strong></td>
-                                <td style="text-align: right;">0</td>
-                                <td style="text-align: right;">9</td>
-                                <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="accepted-monthly-view" class="view active">
-                    <h2 style="margin-bottom: 10px; color: #2d3748;">Monthly Acceptance Rates</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th style="text-align: right;">Accepted</th>
-                                <th style="text-align: right;">Total</th>
-                                <th style="text-align: right;">Rate</th>
-                                <th style="text-align: right;">Revenue</th>
-                                <th>Offer Types</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td><strong>2025-10</strong></td>
                                 <td style="text-align: right;">3</td>
-                                <td style="text-align: right;">99</td>
-                                <td style="text-align: right;" class="rate-low">3.0%</td>
-                                <td style="text-align: right;">$86</td>
-                                <td class="details">DISCOUNT: 3</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
                             </tr>
 
                             <tr>
-                                <td><strong>2025-09</strong></td>
-                                <td style="text-align: right;">7</td>
-                                <td style="text-align: right;">110</td>
-                                <td style="text-align: right;" class="rate-low">6.4%</td>
-                                <td style="text-align: right;">$133</td>
-                                <td class="details">PAUSE: 4, DISCOUNT: 3</td>
+                                <td><strong>2025-W32</strong></td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">13</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">92.9%</td>
                             </tr>
+
+                            <tr>
+                                <td><strong>2025-W31</strong></td>
+                                <td style="text-align: right;">16</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;" class="rate-low">6.2%</td>
+                                <td style="text-align: right;" class="rate-low">93.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W30</strong></td>
+                                <td style="text-align: right;">24</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;" class="rate-low">8.3%</td>
+                                <td style="text-align: right;" class="rate-low">87.5%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W29</strong></td>
+                                <td style="text-align: right;">13</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">7.7%</td>
+                                <td style="text-align: right;" class="rate-low">76.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W28</strong></td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">9.1%</td>
+                                <td style="text-align: right;" class="rate-low">90.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W27</strong></td>
+                                <td style="text-align: right;">20</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">17</td>
+                                <td style="text-align: right;" class="rate-low">5.0%</td>
+                                <td style="text-align: right;" class="rate-low">85.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W26</strong></td>
+                                <td style="text-align: right;">19</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">78.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W25</strong></td>
+                                <td style="text-align: right;">19</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">94.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W24</strong></td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">90.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W23</strong></td>
+                                <td style="text-align: right;">16</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">12</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">75.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W22</strong></td>
+                                <td style="text-align: right;">20</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;" class="rate-low">20.0%</td>
+                                <td style="text-align: right;" class="rate-low">75.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W21</strong></td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">90.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W20</strong></td>
+                                <td style="text-align: right;">22</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">13.6%</td>
+                                <td style="text-align: right;" class="rate-low">81.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W19</strong></td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">13</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">92.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W18</strong></td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W17</strong></td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="view active">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Flow 1 - Monthly</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th style="text-align: right;">Sessions</th>
+                                <th style="text-align: right;">Accepted</th>
+                                <th style="text-align: right;">Canceled</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
                             <tr>
                                 <td><strong>2025-08</strong></td>
-                                <td style="text-align: right;">4</td>
-                                <td style="text-align: right;">112</td>
-                                <td style="text-align: right;" class="rate-low">3.6%</td>
-                                <td style="text-align: right;">$135</td>
-                                <td class="details">DISCOUNT: 4</td>
+                                <td style="text-align: right;">36</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;" class="rate-low">2.8%</td>
+                                <td style="text-align: right;" class="rate-low">94.4%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-07</strong></td>
+                                <td style="text-align: right;">81</td>
                                 <td style="text-align: right;">5</td>
-                                <td style="text-align: right;">115</td>
-                                <td style="text-align: right;" class="rate-low">4.3%</td>
-                                <td style="text-align: right;">$125</td>
-                                <td class="details">DISCOUNT: 5</td>
+                                <td style="text-align: right;">67</td>
+                                <td style="text-align: right;" class="rate-low">6.2%</td>
+                                <td style="text-align: right;" class="rate-low">82.7%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-06</strong></td>
+                                <td style="text-align: right;">69</td>
                                 <td style="text-align: right;">4</td>
-                                <td style="text-align: right;">99</td>
-                                <td style="text-align: right;" class="rate-low">4.0%</td>
-                                <td style="text-align: right;">$115</td>
-                                <td class="details">DISCOUNT: 4</td>
+                                <td style="text-align: right;">58</td>
+                                <td style="text-align: right;" class="rate-low">5.8%</td>
+                                <td style="text-align: right;" class="rate-low">84.1%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-05</strong></td>
-                                <td style="text-align: right;">4</td>
-                                <td style="text-align: right;">104</td>
-                                <td style="text-align: right;" class="rate-low">3.8%</td>
-                                <td style="text-align: right;">$135</td>
-                                <td class="details">DISCOUNT: 4</td>
+                                <td style="text-align: right;">72</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;">66</td>
+                                <td style="text-align: right;" class="rate-low">4.2%</td>
+                                <td style="text-align: right;" class="rate-low">91.7%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-04</strong></td>
+                                <td style="text-align: right;">2</td>
                                 <td style="text-align: right;">0</td>
                                 <td style="text-align: right;">2</td>
                                 <td style="text-align: right;" class="rate-low">0.0%</td>
-                                <td style="text-align: right;">$0</td>
-                                <td class="details">-</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
                             </tr>
 
                         </tbody>
@@ -535,317 +443,815 @@
                 </div>
             </div>
         </div>
-
-        <!-- CANCELED SESSIONS SECTION -->
-        <div id="canceled-section" class="section-content">
+</div><div id="flow2-section" class="section-content">
+        <div class="section-content">
             <div class="controls">
-                <button class="toggle-btn" onclick="showView('canceled', 'weekly')">Weekly View</button>
-                <button class="toggle-btn active" onclick="showView('canceled', 'monthly')">Monthly View</button>
+                <button class="toggle-btn" onclick="showViewInSection(event, 'weekly')">Weekly View</button>
+                <button class="toggle-btn active" onclick="showViewInSection(event, 'monthly')">Monthly View</button>
             </div>
 
             <div class="content">
-                <div id="canceled-weekly-view" class="view">
-                    <h2 style="margin-bottom: 10px; color: #2d3748;">Weekly Cancellation Rates</h2>
+                <div class="view">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Flow 2 - Weekly</h2>
                     <table>
                         <thead>
                             <tr>
                                 <th>Week</th>
+                                <th style="text-align: right;">Sessions</th>
+                                <th style="text-align: right;">Accepted</th>
                                 <th style="text-align: right;">Canceled</th>
-                                <th style="text-align: right;">Total</th>
-                                <th style="text-align: right;">Rate</th>
-                                <th>Top Cancellation Reasons</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr>
-                                <td><strong>2025-W43</strong></td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;">1</td>
-                                <td style="text-align: right;" class="rate-low">100.0%</td>
-                                <td class="details">Not Needed Right Now: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W42</strong></td>
-                                <td style="text-align: right;">25</td>
-                                <td style="text-align: right;">30</td>
-                                <td style="text-align: right;" class="rate-low">83.3%</td>
-                                <td class="details">Not Needed Right Now: 15, Budget: 4, Other: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W41</strong></td>
-                                <td style="text-align: right;">16</td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;" class="rate-low">88.9%</td>
-                                <td class="details">Not Needed Right Now: 9, Budget: 3, Technical Issues: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W40</strong></td>
-                                <td style="text-align: right;">31</td>
-                                <td style="text-align: right;">34</td>
-                                <td style="text-align: right;" class="rate-low">91.2%</td>
-                                <td class="details">Not Needed Right Now: 11, Budget: 6, Other: 4</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W39</strong></td>
-                                <td style="text-align: right;">25</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">89.3%</td>
-                                <td class="details">Not Needed Right Now: 10, Budget: 7, Other: 3</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W38</strong></td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;">22</td>
-                                <td style="text-align: right;" class="rate-low">81.8%</td>
-                                <td class="details">Not Needed Right Now: 5, Missing Features: 4, Other: 4</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W37</strong></td>
-                                <td style="text-align: right;">23</td>
-                                <td style="text-align: right;">25</td>
-                                <td style="text-align: right;" class="rate-low">92.0%</td>
-                                <td class="details">Not Needed Right Now: 8, Other: 7, Budget: 3</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W36</strong></td>
-                                <td style="text-align: right;">21</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">75.0%</td>
-                                <td class="details">Not Needed Right Now: 11, Budget: 6, Other: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W35</strong></td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;" class="rate-low">69.2%</td>
-                                <td class="details">Not Needed Right Now: 10, Missing Features: 2, Technical Issues: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W34</strong></td>
-                                <td style="text-align: right;">32</td>
-                                <td style="text-align: right;">35</td>
-                                <td style="text-align: right;" class="rate-low">91.4%</td>
-                                <td class="details">Other: 11, Not Needed Right Now: 10, Budget: 6</td>
-                            </tr>
-
-                            <tr>
                                 <td><strong>2025-W33</strong></td>
-                                <td style="text-align: right;">14</td>
-                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
                                 <td style="text-align: right;" class="rate-low">100.0%</td>
-                                <td class="details">Budget: 6, Not Needed Right Now: 5, Other: 3</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W32</strong></td>
-                                <td style="text-align: right;">23</td>
-                                <td style="text-align: right;">27</td>
-                                <td style="text-align: right;" class="rate-low">85.2%</td>
-                                <td class="details">Other: 9, Not Needed Right Now: 7, Budget: 5</td>
+                                <td style="text-align: right;">13</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">76.9%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W31</strong></td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">92.9%</td>
-                                <td class="details">Not Needed Right Now: 12, Budget: 8, Other: 4</td>
+                                <td style="text-align: right;">12</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;" class="rate-low">8.3%</td>
+                                <td style="text-align: right;" class="rate-low">91.7%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W30</strong></td>
-                                <td style="text-align: right;">32</td>
-                                <td style="text-align: right;">35</td>
-                                <td style="text-align: right;" class="rate-low">91.4%</td>
-                                <td class="details">Not Needed Right Now: 11, Budget: 8, Other: 7</td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">11</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W29</strong></td>
-                                <td style="text-align: right;">15</td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;" class="rate-low">83.3%</td>
-                                <td class="details">Not Needed Right Now: 7, Budget: 4, Other: 2</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W28</strong></td>
-                                <td style="text-align: right;">12</td>
-                                <td style="text-align: right;">15</td>
-                                <td style="text-align: right;" class="rate-low">80.0%</td>
-                                <td class="details">Not Needed Right Now: 8, Other: 3, Budget: 1</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-medium">50.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W27</strong></td>
-                                <td style="text-align: right;">27</td>
-                                <td style="text-align: right;">30</td>
-                                <td style="text-align: right;" class="rate-low">90.0%</td>
-                                <td class="details">Not Needed Right Now: 9, Budget: 9, Other: 3</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">10</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W26</strong></td>
-                                <td style="text-align: right;">21</td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;" class="rate-low">80.8%</td>
-                                <td class="details">Budget: 8, Not Needed Right Now: 6, Missing Features: 3</td>
+                                <td style="text-align: right;">7</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">6</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">85.7%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W25</strong></td>
-                                <td style="text-align: right;">24</td>
-                                <td style="text-align: right;">28</td>
-                                <td style="text-align: right;" class="rate-low">85.7%</td>
-                                <td class="details">Not Needed Right Now: 9, Budget: 7, Other: 6</td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">6</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">66.7%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W24</strong></td>
-                                <td style="text-align: right;">14</td>
-                                <td style="text-align: right;">16</td>
-                                <td style="text-align: right;" class="rate-low">87.5%</td>
-                                <td class="details">Not Needed Right Now: 11, Budget: 1, Other: 1</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">80.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W23</strong></td>
-                                <td style="text-align: right;">17</td>
-                                <td style="text-align: right;">24</td>
-                                <td style="text-align: right;" class="rate-low">70.8%</td>
-                                <td class="details">Other: 7, Budget: 4, Not Needed Right Now: 4</td>
+                                <td style="text-align: right;">8</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">62.5%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-W22</strong></td>
-                                <td style="text-align: right;">21</td>
-                                <td style="text-align: right;">27</td>
-                                <td style="text-align: right;" class="rate-low">77.8%</td>
-                                <td class="details">Not Needed Right Now: 13, Budget: 6, Other: 1</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W21</strong></td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;">21</td>
-                                <td style="text-align: right;" class="rate-low">85.7%</td>
-                                <td class="details">Other: 8, Not Needed Right Now: 4, Technical Issues: 3</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W20</strong></td>
-                                <td style="text-align: right;">26</td>
-                                <td style="text-align: right;">34</td>
-                                <td style="text-align: right;" class="rate-low">76.5%</td>
-                                <td class="details">Not Needed Right Now: 13, Budget: 5, Other: 3</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W19</strong></td>
-                                <td style="text-align: right;">18</td>
-                                <td style="text-align: right;">19</td>
-                                <td style="text-align: right;" class="rate-low">94.7%</td>
-                                <td class="details">Not Needed Right Now: 7, Other: 5, Missing Features: 2</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W18</strong></td>
-                                <td style="text-align: right;">22</td>
-                                <td style="text-align: right;">23</td>
-                                <td style="text-align: right;" class="rate-low">95.7%</td>
-                                <td class="details">Not Needed Right Now: 11, Other: 5, Missing Features: 3</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>2025-W17</strong></td>
-                                <td style="text-align: right;">9</td>
-                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
                                 <td style="text-align: right;" class="rate-low">100.0%</td>
-                                <td class="details">Missing Features: 4, Budget: 3, Not Needed Right Now: 1</td>
                             </tr>
 
                         </tbody>
                     </table>
                 </div>
 
-                <div id="canceled-monthly-view" class="view active">
-                    <h2 style="margin-bottom: 10px; color: #2d3748;">Monthly Cancellation Rates</h2>
+                <div class="view active">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Flow 2 - Monthly</h2>
                     <table>
                         <thead>
                             <tr>
                                 <th>Month</th>
+                                <th style="text-align: right;">Sessions</th>
+                                <th style="text-align: right;">Accepted</th>
                                 <th style="text-align: right;">Canceled</th>
-                                <th style="text-align: right;">Total</th>
-                                <th style="text-align: right;">Rate</th>
-                                <th>Top Cancellation Reasons</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><strong>2025-08</strong></td>
+                                <td style="text-align: right;">29</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">25</td>
+                                <td style="text-align: right;" class="rate-low">3.4%</td>
+                                <td style="text-align: right;" class="rate-low">86.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-07</strong></td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">31</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">91.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-06</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">75.0%</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div><div id="combined-section" class="section-content">
+        <div class="section-content">
+            <div class="controls">
+                <button class="toggle-btn" onclick="showViewInSection(event, 'weekly')">Weekly View</button>
+                <button class="toggle-btn active" onclick="showViewInSection(event, 'monthly')">Monthly View</button>
+            </div>
+
+            <div class="content">
+                <div class="view">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Combined Flows - Weekly</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th style="text-align: right;">Sessions</th>
+                                <th style="text-align: right;">Accepted</th>
+                                <th style="text-align: right;">Canceled</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><strong>2025-W43</strong></td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W42</strong></td>
+                                <td style="text-align: right;">30</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">25</td>
+                                <td style="text-align: right;" class="rate-low">6.7%</td>
+                                <td style="text-align: right;" class="rate-low">83.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W41</strong></td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">16</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">88.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W40</strong></td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">31</td>
+                                <td style="text-align: right;" class="rate-low">2.9%</td>
+                                <td style="text-align: right;" class="rate-low">91.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W39</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">25</td>
+                                <td style="text-align: right;" class="rate-low">3.6%</td>
+                                <td style="text-align: right;" class="rate-low">89.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W38</strong></td>
+                                <td style="text-align: right;">22</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">4.5%</td>
+                                <td style="text-align: right;" class="rate-low">81.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W37</strong></td>
+                                <td style="text-align: right;">25</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">23</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">92.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W36</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;" class="rate-low">3.6%</td>
+                                <td style="text-align: right;" class="rate-low">75.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W35</strong></td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">19.2%</td>
+                                <td style="text-align: right;" class="rate-low">69.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W34</strong></td>
+                                <td style="text-align: right;">35</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">32</td>
+                                <td style="text-align: right;" class="rate-low">2.9%</td>
+                                <td style="text-align: right;" class="rate-low">91.4%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W33</strong></td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W32</strong></td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">23</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">85.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W31</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;" class="rate-low">7.1%</td>
+                                <td style="text-align: right;" class="rate-low">92.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W30</strong></td>
+                                <td style="text-align: right;">35</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">32</td>
+                                <td style="text-align: right;" class="rate-low">5.7%</td>
+                                <td style="text-align: right;" class="rate-low">91.4%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W29</strong></td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;" class="rate-low">5.6%</td>
+                                <td style="text-align: right;" class="rate-low">83.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W28</strong></td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">12</td>
+                                <td style="text-align: right;" class="rate-low">6.7%</td>
+                                <td style="text-align: right;" class="rate-low">80.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W27</strong></td>
+                                <td style="text-align: right;">30</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;" class="rate-low">3.3%</td>
+                                <td style="text-align: right;" class="rate-low">90.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W26</strong></td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">80.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W25</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">24</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">85.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W24</strong></td>
+                                <td style="text-align: right;">16</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">87.5%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W23</strong></td>
+                                <td style="text-align: right;">24</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">17</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">70.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W22</strong></td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;" class="rate-low">14.8%</td>
+                                <td style="text-align: right;" class="rate-low">77.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W21</strong></td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">85.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W20</strong></td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;" class="rate-low">11.8%</td>
+                                <td style="text-align: right;" class="rate-low">76.5%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W19</strong></td>
+                                <td style="text-align: right;">19</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">94.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W18</strong></td>
+                                <td style="text-align: right;">23</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">22</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">95.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W17</strong></td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                                <td style="text-align: right;" class="rate-low">100.0%</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="view active">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Combined Flows - Monthly</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th style="text-align: right;">Sessions</th>
+                                <th style="text-align: right;">Accepted</th>
+                                <th style="text-align: right;">Canceled</th>
+                                <th style="text-align: right;">Acceptance Rate</th>
+                                <th style="text-align: right;">Cancellation Rate</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr>
                                 <td><strong>2025-10</strong></td>
-                                <td style="text-align: right;">89</td>
-                                <td style="text-align: right;">99</td>
-                                <td style="text-align: right;" class="rate-low">89.9%</td>
-                                <td class="details">Not Needed Right Now: 44, Budget: 18, Technical Issues: 8</td>
+                                <td style="text-align: right;">100</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;">90</td>
+                                <td style="text-align: right;" class="rate-low">3.0%</td>
+                                <td style="text-align: right;" class="rate-low">90.0%</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-09</strong></td>
-                                <td style="text-align: right;">87</td>
                                 <td style="text-align: right;">110</td>
+                                <td style="text-align: right;">7</td>
+                                <td style="text-align: right;">87</td>
+                                <td style="text-align: right;" class="rate-low">6.4%</td>
                                 <td style="text-align: right;" class="rate-low">79.1%</td>
-                                <td class="details">Not Needed Right Now: 35, Other: 17, Budget: 14</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-08</strong></td>
-                                <td style="text-align: right;">102</td>
                                 <td style="text-align: right;">112</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">102</td>
+                                <td style="text-align: right;" class="rate-low">3.6%</td>
                                 <td style="text-align: right;" class="rate-low">91.1%</td>
-                                <td class="details">Not Needed Right Now: 35, Other: 28, Budget: 27</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-07</strong></td>
-                                <td style="text-align: right;">98</td>
                                 <td style="text-align: right;">115</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;">98</td>
+                                <td style="text-align: right;" class="rate-low">4.3%</td>
                                 <td style="text-align: right;" class="rate-low">85.2%</td>
-                                <td class="details">Not Needed Right Now: 40, Budget: 26, Other: 16</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-06</strong></td>
-                                <td style="text-align: right;">80</td>
                                 <td style="text-align: right;">99</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">80</td>
+                                <td style="text-align: right;" class="rate-low">4.0%</td>
                                 <td style="text-align: right;" class="rate-low">80.8%</td>
-                                <td class="details">Not Needed Right Now: 38, Budget: 20, Other: 15</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-05</strong></td>
-                                <td style="text-align: right;">91</td>
                                 <td style="text-align: right;">104</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;">91</td>
+                                <td style="text-align: right;" class="rate-low">3.8%</td>
                                 <td style="text-align: right;" class="rate-low">87.5%</td>
-                                <td class="details">Not Needed Right Now: 36, Other: 21, Budget: 12</td>
                             </tr>
 
                             <tr>
                                 <td><strong>2025-04</strong></td>
                                 <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">0</td>
                                 <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
                                 <td style="text-align: right;" class="rate-low">100.0%</td>
-                                <td class="details">Missing Features: 2</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+        <div id="reactivation-section" class="section-content">
+            <div class="controls">
+                <button class="toggle-btn" onclick="showViewInSection(event, 'weekly')">Weekly View</button>
+                <button class="toggle-btn active" onclick="showViewInSection(event, 'monthly')">Monthly View</button>
+            </div>
+
+            <div class="content">
+                <div class="view">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Reactivation Rate - Weekly</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th style="text-align: right;">Unique Customers</th>
+                                <th style="text-align: right;">Reactivated</th>
+                                <th style="text-align: right;">Reactivation Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><strong>2025-W43</strong></td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;" class="rate-good">50.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W42</strong></td>
+                                <td style="text-align: right;">30</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;" class="rate-low">3.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W41</strong></td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-medium">11.1%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W40</strong></td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;" class="rate-medium">11.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W39</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;" class="rate-medium">10.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W38</strong></td>
+                                <td style="text-align: right;">22</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;" class="rate-good">18.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W37</strong></td>
+                                <td style="text-align: right;">25</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-good">20.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W36</strong></td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;">7</td>
+                                <td style="text-align: right;" class="rate-good">25.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W35</strong></td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W34</strong></td>
+                                <td style="text-align: right;">35</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W33</strong></td>
+                                <td style="text-align: right;">14</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W32</strong></td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W31</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;" class="rate-medium">14.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W30</strong></td>
+                                <td style="text-align: right;">35</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">5.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W29</strong></td>
+                                <td style="text-align: right;">18</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-medium">11.1%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W28</strong></td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W27</strong></td>
+                                <td style="text-align: right;">30</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;" class="rate-low">3.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W26</strong></td>
+                                <td style="text-align: right;">26</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W25</strong></td>
+                                <td style="text-align: right;">28</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;" class="rate-low">3.6%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W24</strong></td>
+                                <td style="text-align: right;">15</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-medium">13.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W23</strong></td>
+                                <td style="text-align: right;">23</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-medium">8.7%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W22</strong></td>
+                                <td style="text-align: right;">27</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W21</strong></td>
+                                <td style="text-align: right;">21</td>
+                                <td style="text-align: right;">1</td>
+                                <td style="text-align: right;" class="rate-low">4.8%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W20</strong></td>
+                                <td style="text-align: right;">34</td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;" class="rate-low">5.9%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W19</strong></td>
+                                <td style="text-align: right;">19</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W18</strong></td>
+                                <td style="text-align: right;">23</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-W17</strong></td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="view active">
+                    <h2 style="margin-bottom: 10px; color: #2d3748;">Reactivation Rate - Monthly</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th style="text-align: right;">Unique Customers</th>
+                                <th style="text-align: right;">Reactivated</th>
+                                <th style="text-align: right;">Reactivation Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><strong>2025-10</strong></td>
+                                <td style="text-align: right;">98</td>
+                                <td style="text-align: right;">9</td>
+                                <td style="text-align: right;" class="rate-medium">9.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-09</strong></td>
+                                <td style="text-align: right;">105</td>
+                                <td style="text-align: right;">16</td>
+                                <td style="text-align: right;" class="rate-good">15.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-08</strong></td>
+                                <td style="text-align: right;">112</td>
+                                <td style="text-align: right;">4</td>
+                                <td style="text-align: right;" class="rate-low">3.6%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-07</strong></td>
+                                <td style="text-align: right;">113</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-low">4.4%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-06</strong></td>
+                                <td style="text-align: right;">96</td>
+                                <td style="text-align: right;">5</td>
+                                <td style="text-align: right;" class="rate-low">5.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-05</strong></td>
+                                <td style="text-align: right;">101</td>
+                                <td style="text-align: right;">3</td>
+                                <td style="text-align: right;" class="rate-low">3.0%</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>2025-04</strong></td>
+                                <td style="text-align: right;">2</td>
+                                <td style="text-align: right;">0</td>
+                                <td style="text-align: right;" class="rate-low">0.0%</td>
                             </tr>
 
                         </tbody>
@@ -855,29 +1261,30 @@
         </div>
 
         <div class="footer">
-            Churnkey Analytics | Data from Churnkey API
+            Churnkey Flows & Reactivation Analytics | Updated from latest session data
         </div>
     </div>
 
     <script>
         function showSection(section) {
-            // Hide all sections
             document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
 
-            // Show selected section
             document.getElementById(section + '-section').classList.add('active');
             event.target.classList.add('active');
         }
 
-        function showView(section, period) {
-            // Hide all views in this section
-            const sectionEl = document.getElementById(section + '-section');
-            sectionEl.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            sectionEl.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        function showViewInSection(event, viewType) {
+            const section = event.target.closest('.section-content');
+            section.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            section.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
 
-            // Show selected view
-            document.getElementById(section + '-' + period + '-view').classList.add('active');
+            const views = section.querySelectorAll('.view');
+            if (viewType === 'weekly') {
+                views[0].classList.add('active');
+            } else {
+                views[1].classList.add('active');
+            }
             event.target.classList.add('active');
         }
     </script>
