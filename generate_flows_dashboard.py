@@ -411,7 +411,6 @@ class FlowsDashboard:
         # Helper function to generate flow tables
         def generate_flow_table(weekly_stats, monthly_stats, title):
             tables_html = f"""
-        <div class="section-content">
             <div class="controls">
                 <button class="toggle-btn" onclick="showViewInSection(event, 'weekly')">Weekly View</button>
                 <button class="toggle-btn active" onclick="showViewInSection(event, 'monthly')">Monthly View</button>
@@ -489,7 +488,6 @@ class FlowsDashboard:
                     </table>
                 </div>
             </div>
-        </div>
 """
             return tables_html
 
