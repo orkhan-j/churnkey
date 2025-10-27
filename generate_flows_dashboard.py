@@ -108,7 +108,20 @@ class FlowsDashboard:
         df = pd.DataFrame(all_records)
 
         if not df.empty:
-            df['week_label'] = df['date'].dt.strftime('%Y-W%U')
+            # Create week labels with readable date ranges
+            df['week_start'] = df['date'] - pd.to_timedelta(df['date'].dt.weekday, unit='d')
+            df['week_end'] = df['week_start'] + pd.Timedelta(days=6)
+
+            def format_week(row):
+                start = row['week_start']
+                end = row['week_end']
+                if start.month == end.month:
+                    return f"{start.strftime('%b %d')}-{end.day}"
+                else:
+                    return f"{start.strftime('%b %d')}-{end.strftime('%b %d')}"
+
+            df['week_label_display'] = df.apply(format_week, axis=1)
+            df['week_label'] = df['date'].dt.strftime('%Y-W%U')  # Keep for sorting
             df['month_label'] = df['date'].dt.strftime('%Y-%m')
 
         return df, customer_sessions
@@ -120,6 +133,12 @@ class FlowsDashboard:
         # Filter by flow if specified
         if flow_filter:
             df = df[df['flow'] == flow_filter].copy()
+
+        # For weeks, also get display labels
+        if period == 'week':
+            display_col = 'week_label_display'
+            # Get first display label for each week
+            display_labels = df.groupby(period_col)[display_col].first()
 
         # All sessions
         all_sessions = df.groupby(period_col).size().reset_index(name='total_sessions')
@@ -140,11 +159,24 @@ class FlowsDashboard:
         result['cancellation_rate'] = (result['canceled_count'] / result['total_sessions'] * 100).round(1)
 
         result = result.rename(columns={period_col: 'period'})
+
+        # Add display label for weeks
+        if period == 'week':
+            result = result.merge(display_labels.reset_index(), left_on='period', right_on=period_col, how='left')
+            result['period_display'] = result[display_col]
+            result = result.drop(columns=[display_col])
+        else:
+            result['period_display'] = result['period']
+
         return result.sort_values('period', ascending=False)
 
     def calculate_reactivation_stats(self, df, customer_sessions, period='month'):
         """Calculate reactivation rates"""
         period_col = f'{period}_label'
+
+        # For weeks, also get display labels
+        if period == 'week':
+            display_mapping = df.groupby(period_col)['week_label_display'].first().to_dict()
 
         # Get reactivated customers (those with multiple sessions)
         reactivated_customers = {cust_id: sessions for cust_id, sessions in customer_sessions.items() if len(sessions) > 1}
@@ -173,8 +205,11 @@ class FlowsDashboard:
 
             reactivation_rate = (reactivated_in_period / unique_customers * 100) if unique_customers > 0 else 0
 
+            period_display = display_mapping.get(period_val, period_val) if period == 'week' else period_val
+
             reactivation_data.append({
                 'period': period_val,
+                'period_display': period_display,
                 'unique_customers': unique_customers,
                 'reactivated_customers': reactivated_in_period,
                 'reactivation_rate': round(reactivation_rate, 1)
@@ -438,7 +473,7 @@ class FlowsDashboard:
 
                 tables_html += f"""
                             <tr>
-                                <td><strong>{row['period']}</strong></td>
+                                <td><strong>{row['period_display']}</strong></td>
                                 <td style="text-align: right;">{int(row['total_sessions'])}</td>
                                 <td style="text-align: right;">{int(row['accepted_count'])}</td>
                                 <td style="text-align: right;">{int(row['canceled_count'])}</td>
@@ -474,7 +509,7 @@ class FlowsDashboard:
 
                 tables_html += f"""
                             <tr>
-                                <td><strong>{row['period']}</strong></td>
+                                <td><strong>{row['period_display']}</strong></td>
                                 <td style="text-align: right;">{int(row['total_sessions'])}</td>
                                 <td style="text-align: right;">{int(row['accepted_count'])}</td>
                                 <td style="text-align: right;">{int(row['canceled_count'])}</td>
@@ -531,7 +566,7 @@ class FlowsDashboard:
             rate_class = 'rate-good' if row['reactivation_rate'] >= 15 else 'rate-medium' if row['reactivation_rate'] >= 8 else 'rate-low'
             html += f"""
                             <tr>
-                                <td><strong>{row['period']}</strong></td>
+                                <td><strong>{row['period_display']}</strong></td>
                                 <td style="text-align: right;">{int(row['unique_customers'])}</td>
                                 <td style="text-align: right;">{int(row['reactivated_customers'])}</td>
                                 <td style="text-align: right;" class="{rate_class}">{row['reactivation_rate']}%</td>
@@ -561,7 +596,7 @@ class FlowsDashboard:
             rate_class = 'rate-good' if row['reactivation_rate'] >= 15 else 'rate-medium' if row['reactivation_rate'] >= 8 else 'rate-low'
             html += f"""
                             <tr>
-                                <td><strong>{row['period']}</strong></td>
+                                <td><strong>{row['period_display']}</strong></td>
                                 <td style="text-align: right;">{int(row['unique_customers'])}</td>
                                 <td style="text-align: right;">{int(row['reactivated_customers'])}</td>
                                 <td style="text-align: right;" class="{rate_class}">{row['reactivation_rate']}%</td>
